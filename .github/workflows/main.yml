@@ -7,15 +7,44 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Install sqlite
         run: sudo apt-get install libsqlite3-dev
       - uses: actions/checkout@v1
-      - name: Set up Ruby 2.5
+
+      - name: Set up Ruby 2.5 (rails3-6)
         uses: actions/setup-ruby@v1
         with:
           ruby-version: 2.5.x
-      - name: Run build
+      - name: Generate rails3-6 examples
+        run: bash ./generate-github.sh
+
+      - name: Set up Ruby 3.4 (rails8)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+      - name: Generate rails8 example
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        run: bash ./generate-github-rails8.sh
+
+      - name: Publish to gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
-        run: bash ./generate-github.sh
+        run: bash ./generate-github-publish.sh

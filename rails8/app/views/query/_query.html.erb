@@ -1,0 +1,23 @@
+<%
+  query_box_id = query[:name].to_s.parameterize(separator: "_")
+%>
+
+<div id="<%= query_box_id %>">
+  <%= form_with url: "/query/#{query[:action]}", method: :post, local: true do %>
+    <fieldset>
+      <legend><%= query[:name] || query[:action] %></legend>
+
+      <div>
+        <code><%= code query[:query] %></code>
+      </div>
+
+      <% if input = query[:input] %>
+        <div>
+          <label><%= input[:name].to_s.capitalize %></label>
+          <%= text_field_tag input[:name], input[:example] %>
+          <%= submit_tag "Run!" %>
+        </div>
+      <% end %>
+    </fieldset>
+  <% end %>
+</div>

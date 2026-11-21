@@ -1,0 +1,15 @@
+<h1>Inject Some SQL - Rails 8 / Solid Cache</h1>
+<p>
+  This page lists Solid Cache / Solid Queue call patterns that do not bind
+  user input and are not intended to be called with unsafe input. See
+  <%= link_to "the README", "https://github.com/presidentbeef/inject-some-sql" %>
+  for the rest of the examples across Rails versions.
+</p>
+
+<table>
+  <% @queries.each do |q| %>
+    <tr>
+      <td><%= render partial: "query", locals: { query: q } %></td>
+    </tr>
+  <% end %>
+</table>

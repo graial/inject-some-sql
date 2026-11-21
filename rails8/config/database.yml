@@ -1,0 +1,86 @@
+# development uses plain SQLite, for a zero-setup `bundle install && rails db:setup`.
+#
+# "production" and the FUZZ=1 test environment use Postgres instead, because
+# SQLite only ever executes one statement at a time: a stacked-statement
+# payload (`x'); INSERT INTO solid_cache_entries ...; --`) is inert there,
+# which would silently hide the exact write primitive this example exists to
+# demonstrate (see docs/solid_cache_poisoning_threat_model.md, section 3).
+#
+#   gem install pg sqlite3
+default: &default
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+postgres: &postgres
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+  # Leave POSTGRES_HOST unset to connect over the local Unix socket (the
+  # common case for local Postgres with peer auth); set it to use TCP/password
+  # auth instead (e.g. in CI).
+  username: <%= ENV.fetch("POSTGRES_USER", ENV["USER"]) %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  host: <%= ENV["POSTGRES_HOST"] %>
+
+development:
+  primary:
+    <<: *default
+    database: storage/development.sqlite3
+  cache:
+    <<: *default
+    database: storage/development_cache.sqlite3
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: storage/development_queue.sqlite3
+    migrations_paths: db/queue_migrate
+
+# Warning: The database defined as "test" will be erased and
+# re-generated when you run the test suite. Do not set this db to the
+# same as development or production.
+test:
+<% if ENV["FUZZ"] %>
+  # Security fuzzing (bin/rails test:security): both databases are throwaway
+  # Postgres databases so stacked-statement injection is a real test
+  # everywhere, not an artifact of SQLite's single-statement execution.
+  primary:
+    <<: *postgres
+    database: <%= ENV.fetch("FUZZ_PRIMARY_DB", "inject_some_sql_rails8_test_primary") %>
+  cache:
+    <<: *postgres
+    database: <%= ENV.fetch("FUZZ_CACHE_DB", "inject_some_sql_rails8_test_cache") %>
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *postgres
+    database: <%= ENV.fetch("FUZZ_QUEUE_DB", "inject_some_sql_rails8_test_queue") %>
+    migrations_paths: db/queue_migrate
+<% else %>
+  primary:
+    <<: *default
+    database: storage/test.sqlite3
+  cache:
+    <<: *default
+    database: storage/test_cache.sqlite3
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: storage/test_queue.sqlite3
+    migrations_paths: db/queue_migrate
+<% end %>
+
+# Not a real deployment target - "production" here only exists so
+# generate.sh/generate-github.sh can boot this app once, against Postgres,
+# to scrape the example page into the published static site. See README.
+production:
+  primary:
+    <<: *postgres
+    database: <%= ENV.fetch("POSTGRES_PRIMARY_DB", "inject_some_sql_rails8_production") %>
+  cache:
+    <<: *postgres
+    database: <%= ENV.fetch("POSTGRES_CACHE_DB", "inject_some_sql_rails8_production_cache") %>
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *postgres
+    database: <%= ENV.fetch("POSTGRES_QUEUE_DB", "inject_some_sql_rails8_production_queue") %>
+    migrations_paths: db/queue_migrate

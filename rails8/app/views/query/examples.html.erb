@@ -1,0 +1,44 @@
+<h2 id="overview">Overview</h2>
+<p>
+  The <a href="https://rubyonrails.org/">Ruby on Rails</a> web framework
+  provides a library called
+  <a href="https://guides.rubyonrails.org/active_record_querying.html">ActiveRecord</a>,
+  and a database-backed cache store called
+  <a href="https://guides.rubyonrails.org/caching_with_rails.html#solid-cache">Solid Cache</a>.
+</p>
+<p>
+  This page lists call patterns that interpolate unbound input into SQL run
+  against the same database connection Solid Cache uses for
+  <code>solid_cache_entries</code>. Careless use of these patterns lets SQL
+  injection reach the cache table itself, not just application tables.
+</p>
+<p>
+  Please use this list as a guide of what <em>not</em> to do.
+</p>
+<h3>Examples</h3>
+<p>
+  Each entry below shows the query run, the SQL it produced, and the
+  resulting row(s) - including, where relevant, the
+  <code>solid_cache_entries</code> rows it wrote. The examples on this page
+  were tested with <b>Rails 8.0.5</b> and Postgres.
+</p>
+<h3>Interactive Version</h3>
+<p>
+  Clone and run this site from
+  <a href="https://github.com/presidentbeef/inject-some-sql">the git repo</a>
+  to try out or modify the examples!
+</p>
+<table>
+  <% @queries.each do |q| %>
+    <tr>
+      <td><%= render partial: "example", locals: { query: q } %></td>
+    </tr>
+  <% end %>
+</table>
+<table>
+  <% @queries.each do |q| %>
+    <tr>
+      <td><%= render partial: "query", locals: { query: q } %></td>
+    </tr>
+  <% end %>
+</table>

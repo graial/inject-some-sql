@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rails 8 SQL Injection / Solid Cache Examples</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <nav>
+    <a href="../rails3.html">Rails 3</a> |
+    <a href="../rails4.html">Rails 4</a> |
+    <a href="../rails5.html">Rails 5</a> |
+    <a href="../rails6.html">Rails 6</a> |
+    <strong>Rails 8</strong>
+  </nav>
+
+  <%= yield %>
+
+  <hr>
+  <h2>More Resources</h2>
+  <ul>
+    <li><a href="https://guides.rubyonrails.org/security.html">Official Rails Security Guide</a></li>
+    <li><a href="https://guides.rubyonrails.org/caching_with_rails.html">Rails Caching Guide</a></li>
+    <li><a href="https://owasp.org/www-project-cheat-sheets/cheatsheets/Ruby_on_Rails_Cheatsheet.html">OWASP Rails Cheatsheet</a></li>
+    <li><a href="https://brakemanscanner.org">Brakeman</a></li>
+  </ul>
+  <p>
+    This site is also available as a Rails application. To interact with it
+    dynamically, <a href="https://github.com/presidentbeef/inject-some-sql">clone the code</a>
+    and run it locally. Contributions and corrections are welcome!
+  </p>
+</body>
+</html>

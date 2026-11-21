@@ -1,0 +1,8 @@
+# Private working docs: threat models, CONTEXT.md glossaries, generated ADRs.
+# Anything under docs/ is working material for this repo's maintainer, not
+# part of the published examples.
+/docs/
+
+# wasm build artifacts (e.g. wasmify-rails output). These are built, not
+# committed; see ../phrug-icp-demo-rails for the runnable wasm/ICP track.
+*.wasm

@@ -1,0 +1,25 @@
+<div id="<%= query[:action] %>">
+  <div>
+    <a href="<%= query[:link] %>">Documentation</a>
+  </div>
+
+  <h3><%= query[:name] || query[:action] %></h3>
+
+  <div><%= md query[:desc] if query[:desc] %></div>
+
+  <h4>Example</h4>
+  <p><%= md query[:example] if query[:example] %></p>
+
+  <div>
+    <%= code "params[:#{query[:input][:name]}] = #{query[:input][:example].inspect}" %>
+    <%= code query[:query] %>
+  </div>
+
+  <div>
+    <strong>Query</strong>
+    <div><%= code query[:sql] %></div>
+
+    <strong>Result</strong>
+    <div><%= query[:result] %></div>
+  </div>
+</div>

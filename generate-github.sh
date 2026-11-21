@@ -86,33 +86,5 @@ cp -rf localhost\:3000/assets/* ../tmp/assets/
 rm -rf localhost\:3000
 cd ..
 
-echo "Checking results"
-test -f tmp/index.html
-test -f tmp/rails3.html
-test -f tmp/rails4.html
-test -f tmp/rails5.html
-test -f tmp/rails6.html
-
-if [ ${GITHUB_REF##*/} = "master" ]
-then
-  git reset --hard
-  git checkout gh-pages
-  rm -rf assets
-  mv tmp/* .
-  rm -rf tmp
-
-  git config --local user.email "action@github.com"
-  git config --local user.name "GitHub Action"
-
-  git add index.html rails3.html rails4.html rails5.html rails6.html assets/
-  git -c user.name="GitHub Actions" -c user.email="noreply@github.com" commit \
-          --author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" \
-          -m "Automated build at $(date -u)"
-
-  git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-  git push origin gh-pages
-
-  echo "Pushed changes to site"
-else
-  echo "Build appears to have succeeded"
-fi
+# rails8 is generated separately (generate-github-rails8.sh), under its own
+# Ruby version and against Postgres, then published by generate-github-publish.sh.

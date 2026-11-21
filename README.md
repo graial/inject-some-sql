@@ -10,7 +10,7 @@ Clone the repo:
 git clone https://github.com/presidentbeef/inject-some-sql.git
 ```
 
-Pick either Rails 5, Rails 4 or Rails 3. They each have their own subdirectory.
+Pick Rails 8, 6, 5, 4 or 3. They each have their own subdirectory.
 
 ```
 cd inject-some-sql/rails5
@@ -21,6 +21,22 @@ In the subdirectory, install dependences and set up the database:
 ```
 bundle install
 rake db:setup db:seed
+```
+
+Rails 8 is different from the others: its examples are about SQL injection
+reaching the Solid Cache-backed `solid_cache_entries` table, not just
+application tables, and that needs Postgres (not SQLite) to actually
+demonstrate - see `rails8/README.md` for its own setup.
+
+### Using a different Ruby build
+
+Each app's Ruby version is pinned by its own `.ruby-version`. If you're using
+[rbenv](https://github.com/rbenv/rbenv), override it with the `RBENV_VERSION`
+environment variable - for example, to use a patched install or a version not 
+included in rbenv's registry:
+
+```
+RBENV_VERSION=my-patched-ruby bundle install
 ```
 
 ### Run

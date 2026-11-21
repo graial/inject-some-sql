@@ -1,0 +1,7 @@
+<% cache @product do %>
+  <h1><%= @product.title %></h1>
+  <p><%= @product.description %></p>
+  <p><%= number_to_currency(@product.price) %></p>
+<% end %>
+
+<%= link_to "Back to store", store_index_path %>
